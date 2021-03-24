@@ -1,0 +1,66 @@
+﻿@model ProductListViewModel
+@{
+    ViewBag.Title = "Product Manager";
+}
+
+<h1>@ViewBag.Title</h1>
+<div class="row">
+    <div class="col-sm-2">
+        <div class="list-group">
+            <a asp-controller="Product" asp-action="List" asp-route-id="All" class="list-group-item
+     @if (Model.SelectedCategory == "All") {
+         <text>active</text>}">
+                All
+            </a>
+
+            @foreach (Category category in Model.Categories)
+            {
+                <a asp-controller="Product" asp-action="List" asp-route-id="@category.Name" class="list-group-item
+                   @Model.CheckActiveCategory(category.Name)
+          ">
+                    @category.Name
+                </a>
+            }
+        </div>
+    </div>
+
+    <div class="col-sm-10">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model.Products)
+                {
+                    <tr>
+                        <td>@product.Name</td>
+                        <td>@product.Price.ToString("C")</td>
+                        <td>
+                            <a asp-controller="Product" asp-action="Update" asp-route-id="@product.ProductID">Update</a>
+                        </td>
+                        <td>
+                            <a asp-controller="Product" asp-action="Delete" asp-route-id="@product.ProductID">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @*tempdata not ther when page first load*@
+        @{ 
+           string userMessage = TempData?["UserMessage"]?.ToString() ?? "";
+        }
+        @if(userMessage!= "")
+        {
+            <div class="text-success">
+                @userMessage
+            </div>
+        }
+        <a asp-controller="Product" asp-action="Add" class="btn btn-primary">Add new product</a>
+    </div>
+</div>
+
